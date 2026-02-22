@@ -1,0 +1,5 @@
+{
+  "name": "Quijote Run - Marathon Planner",
+  "description": "Aplicación de planificación de maratones con seguimiento de progreso y panel de administración.",
+  "requestFramePermissions": []
+}
