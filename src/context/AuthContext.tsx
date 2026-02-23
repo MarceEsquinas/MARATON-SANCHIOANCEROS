@@ -46,20 +46,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => subscription.unsubscribe();
   }, []);
 
-  const signIn = async (email: string, pass: string) => {
-    // Hardcoded admin check as requested
-    const loginEmail = email === 'admin' ? 'admin@quijoterun.com' : email;
-    const loginPass = email === 'admin' && pass === 'admin' ? 'admin_password_placeholder' : pass;
-
+  const signIn = async (username: string, pass: string) => {
+    // Transform username to email if it's not already an email
+    const email = username.includes('@') ? username : `${username.toLowerCase()}@quijoterun.com`;
+    
+    // Special case for admin/admin if needed, but we try Supabase first
     const { error } = await supabase.auth.signInWithPassword({
-      email: loginEmail,
-      password: loginPass,
+      email,
+      password: pass,
     });
 
-    if (error) throw error;
+    if (error) {
+      // If it's the fixed admin and Supabase fails (e.g. user not created yet), 
+      // we could show a more specific error or handle it.
+      throw error;
+    }
   };
 
-  const signUp = async (email: string, pass: string) => {
+  const signUp = async (username: string, pass: string) => {
+    const email = username.includes('@') ? username : `${username.toLowerCase()}@quijoterun.com`;
+    
     const { error } = await supabase.auth.signUp({
       email,
       password: pass,

@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Logo } from '../components/Logo';
-import { Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react';
+import { User, Lock, ArrowRight, AlertCircle } from 'lucide-react';
+
+import { isSupabaseConfigured } from '../services/supabase';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -36,6 +38,15 @@ export const LoginPage = () => {
         </div>
 
         <div className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
+          {!isSupabaseConfigured && (
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-100 text-amber-700 rounded-2xl flex items-start gap-3 text-sm">
+              <AlertCircle size={18} className="shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold">Configuración requerida</p>
+                <p>Debes configurar las variables de Supabase en el panel de Secretos para que el login funcione.</p>
+              </div>
+            </div>
+          )}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl flex items-start gap-3 text-sm">
               <AlertCircle size={18} className="shrink-0 mt-0.5" />
@@ -45,14 +56,14 @@ export const LoginPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">Email o Usuario</label>
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">Nombre de usuario</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                 <input 
                   type="text" 
                   required
                   className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all"
-                  placeholder="admin o tu email"
+                  placeholder="Tu nombre (ej: quijote)"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
